@@ -8,7 +8,7 @@ vim.opt.number = true
 vim.opt.relativenumber = true
 vim.opt.showmode = false
 
-vim.schedule(function () 
+vim.schedule(function()
   vim.opt.clipboard = 'unnamedplus'
 end)
 
