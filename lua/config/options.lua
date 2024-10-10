@@ -2,7 +2,13 @@ vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
 vim.g.have_nerd_font = true
-vim.opt.guifont = "JetBrainsMono Nerd Font:h11"
+
+if (vim.fn.has("win32") == 1) then
+  vim.opt.guifont = "JetBrainsMono NFM SemiBold:h11"
+end
+if (vim.fn.has("unix") == 1) then
+  vim.opt.guifont = "JetBrainsMono Nerd Font:h11"
+end
 
 vim.opt.number = true
 vim.opt.relativenumber = true

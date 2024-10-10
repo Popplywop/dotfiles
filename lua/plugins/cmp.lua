@@ -24,7 +24,7 @@ local function cmp_setup()
     end,
     snippet = {
       expand = function(args)
-        vim.fn["UltiSnips#Anon"](args.body)
+        require("luasnip").lsp_expand(args.body)
       end,
     },
     view = {
@@ -70,7 +70,6 @@ local function cmp_setup()
       { name = "luasnip" },
       { name = "buffer",  keyword_length = 3 },
       { name = "copilot" },
-      { name = "ultisnips" }
     },
     ---@diagnostic disable-next-line: missing-fields
     formatting = {
@@ -137,7 +136,7 @@ return {
     end
   },
   -- Autocompletion
-  { "hrsh7th/nvim-cmp",                   config = cmp_setup },
+  { "hrsh7th/nvim-cmp",            config = cmp_setup },
   { "hrsh7th/cmp-buffer" },   -- completions from buffer
   { "hrsh7th/cmp-path" },     -- completions from paths
   { "hrsh7th/cmp-cmdline" },  -- completions from cmd line
@@ -148,8 +147,6 @@ return {
   { "L3MON4D3/LuaSnip" },
   { "saadparwaiz1/cmp_luasnip" },     -- LuaSnip completions
   { "rafamadriz/friendly-snippets" }, -- vscode-like snippes
-  { "SirVir/ultisnips" },
-  { "quangnguyen30192/cmp-nvim-ultisnips" },
 
   -- UI
   { "onsails/lspkind.nvim" }, -- add nerd icons to completion menu sources
