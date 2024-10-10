@@ -2,7 +2,9 @@ return {
   {
     "williamboman/mason.nvim",
     cmd = "Mason",
-    opts = {},
+    opts = {
+      PATH = "prepend"
+    },
   },
   {
     "williamboman/mason-lspconfig.nvim",
@@ -72,7 +74,7 @@ return {
         capabilities = capabilities
       })
       lspconfig.omnisharp.setup({
-        cmd = { "dotnet", "/home/jpopple/.config/nvim-data/omnisharp/Omnisharp.dll" },
+        cmd = { "dotnet", "$HOME/.config/omnisharp/Omnisharp.dll" },
         capabilities = capabilities,
         settings = {
           FormattingOptions = {
