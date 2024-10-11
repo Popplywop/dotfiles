@@ -2,7 +2,11 @@ return {
   {
     "Mofiqul/vscode.nvim",
     config = function()
+      vim.g.t_Co = "256"
+      vim.o.termguicolors = true
       vim.o.background = "dark"
+      vim.cmd.colorscheme "vscode"
+
       local c = require('vscode.colors').get_colors()
       require('vscode').setup({
         -- Alternatively set style in setup
@@ -32,7 +36,6 @@ return {
           Cursor = { fg = c.vscDarkBlue, bg = c.vscLightGreen, bold = true },
         }
       })
-      vim.cmd.colorscheme "vscode"
     end
   }
 }
