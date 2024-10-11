@@ -4,7 +4,7 @@ vim.g.maplocalleader = " "
 vim.g.have_nerd_font = true
 
 if (vim.fn.has("win32") == 1) then
-  vim.opt.guifont = "JetBrainsMono NFM SemiBold:h11"
+  vim.opt.guifont = "JetBrainsMono NFM SemiBold:h14"
 end
 if (vim.fn.has("unix") == 1) then
   vim.opt.guifont = "JetBrainsMono Nerd Font:h11"

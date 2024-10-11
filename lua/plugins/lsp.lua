@@ -92,6 +92,11 @@ return {
           keymap("n", "<leader>ogi", function()
             require("omnisharp_extended").lsp_implementation()
           end, "[O]mnisharp Go To Implementations")
+
+          vim.api.nvim_create_autocmd("InsertLeave", {
+            buffer = bufnr,
+            command = "bufdo update"
+          })
         end,
         capabilities = capabilities,
         root_dir = function(fname)
@@ -99,6 +104,19 @@ return {
           local fallback = require("lspconfig.util").root_pattern("*.csproj")(fname)
           return primary or fallback
         end,
+        settings = {
+          FormattingOptions = {
+            OrganizeImports = true,
+          },
+          MsBuild = {
+            LoadProjectsOnDemand = true,
+          },
+          RoslynExtensionsOptions = {
+            EnableAnalyzersSupport = true,
+            EnableImportCompletion = true,
+            AnalyzeOpenDocumentsOnly = true,
+          },
+        }
       })
       lspconfig.powershell_es.setup({
         capabilities = capabilities,
