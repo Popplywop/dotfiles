@@ -39,16 +39,17 @@ return {
       require("neodev").setup({})
       local lspconfig = require("lspconfig")
 
+      local root_path = vim.fn.expand("$HOME/")
+
       local capabilities = vim.lsp.protocol.make_client_capabilities()
       capabilities = vim.tbl_deep_extend('force', capabilities, require("cmp_nvim_lsp").default_capabilities())
-      capabilities.textDocument.completion.completionItem.snippetSupport = true
 
       lspconfig.lua_ls.setup({
         capabilities = capabilities,
         settings = {
           Lua = {
             diagnostics = {
-              globals = { "vim", "require" },
+              globals = { "vim", "require", "nnoremap" },
             },
             telemetry = { enable = false, },
             hint = { enable = true }
@@ -74,36 +75,17 @@ return {
         capabilities = capabilities
       })
       lspconfig.omnisharp.setup({
-        cmd = { "dotnet", "$HOME/.config/omnisharp/Omnisharp.dll" },
+        cmd = { "dotnet", root_path .. ".config/omnisharp/OmniSharp.dll" },
         capabilities = capabilities,
-        settings = {
-          FormattingOptions = {
-            EnableEditorConfigSupport = true,
-            OrganizeImports = true,
-          },
-          MsBuild = {
-            LoadProjectsOnDemand = true
-          },
-          RoslynExtensionsOptions = {
-            EnableAnalyzersSupport = true,
-            EnableImportCompletion = true,
-            AnalyzeOpenDocumentsOnly = true,
-            EnableDecompilationSupport = true
-          },
-          Sdk = {
-            IncludePrereleases = false
-          },
-          Handlers = {
-            ["textDocument/definition"] = require("omnisharp_extended").definition_handler,
-            ["textDocument/typeDefinition"] = require("omnisharp_extended").type_definition_handler,
-            ["textDocument/references"] = require("omnisharp_extended").references_handler,
-            ["textDocument/implementation"] = require("omnisharp_extended").implementation_handler
-          }
-        }
+        root_dir = function(fname)
+          local primary = require("lspconfig.util").root_pattern("*.sln")(fname)
+          local fallback = require("lspconfig.util").root_pattern("*.csproj")(fname)
+          return primary or fallback
+        end,
       })
       lspconfig.powershell_es.setup({
         capabilities = capabilities,
-        cmd = { 'pwsh', '-NoLogo', '-NoProfile', '-Command', "/home/jpopple/.config/nvim-data/PowerShellEditorServices/PowerShellEditorServices/Start-EditorServices.ps1" }
+        cmd = { 'pwsh', '-NoLogo', '-NoProfile', '-Command', root_path .. ".config/PowerShellEditorServices/PowerShellEditorServices/Start-EditorServices.ps1" }
       })
 
       local RangeFormat = function()
@@ -161,6 +143,18 @@ return {
           keymap({ "n", "v" }, "<space>ca", function()
             vim.lsp.buf.code_action({ apply = true })
           end, "code action (LSP)")
+          keymap("n", "<leader>ogd", function()
+            require("omnisharp_extended").lsp_definition()
+          end, "[O]mnisharp Go To Definition")
+          keymap("n", "<leader>ogD", function()
+            require("omnisharp_extended").lsp_type_definition()
+          end, "[O]mnisharp Go To Type Definition")
+          keymap("n", "<leader>ogr", function()
+            require("omnisharp_extended").lsp_references()
+          end, "[O]mnisharp Go To References")
+          keymap("n", "<leader>ogi", function()
+            require("omnisharp_extended").lsp_implementation()
+          end, "[O]mnisharp Go To Implementations")
         end,
       })
     end,

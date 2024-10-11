@@ -16,6 +16,7 @@ return {
           "vimdoc",
           "javascript",
           "html",
+          "c_sharp"
         },
         sync_install = false,
         modules = {
