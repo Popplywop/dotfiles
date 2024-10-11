@@ -76,6 +76,23 @@ return {
       })
       lspconfig.omnisharp.setup({
         cmd = { "dotnet", root_path .. ".config/omnisharp/OmniSharp.dll" },
+        on_attach = function(client, bufnr)
+          local keymap = function(mode, key, action, desc)
+            vim.keymap.set(mode, key, action, { buffer = bufnr, remap = false, desc = desc })
+          end
+          keymap("n", "<leader>ogd", function()
+            require("omnisharp_extended").lsp_definition()
+          end, "[O]mnisharp Go To Definition")
+          keymap("n", "<leader>ogD", function()
+            require("omnisharp_extended").lsp_type_definition()
+          end, "[O]mnisharp Go To Type Definition")
+          keymap("n", "<leader>ogr", function()
+            require("omnisharp_extended").lsp_references()
+          end, "[O]mnisharp Go To References")
+          keymap("n", "<leader>ogi", function()
+            require("omnisharp_extended").lsp_implementation()
+          end, "[O]mnisharp Go To Implementations")
+        end,
         capabilities = capabilities,
         root_dir = function(fname)
           local primary = require("lspconfig.util").root_pattern("*.sln")(fname)
@@ -100,18 +117,6 @@ return {
         })
       end
 
-      -- Inlay parameter hints
-      if vim.lsp.inlay_hint then
-        vim.keymap.set(
-          "n",
-          "<leader>H",
-          function()
-            local change = not vim.lsp.inlay_hint.is_enabled(vim.lsp.inlay_hint.enable.Filter)
-            vim.lsp.inlay_hint.enable(change)
-          end,
-          { desc = "Toggle inlay hints" }
-        )
-      end
       -- Use LspAttach autocommand to only map the following keys
       -- after the language server attaches to the current buffer
       vim.api.nvim_create_autocmd("LspAttach", {
@@ -143,18 +148,6 @@ return {
           keymap({ "n", "v" }, "<space>ca", function()
             vim.lsp.buf.code_action({ apply = true })
           end, "code action (LSP)")
-          keymap("n", "<leader>ogd", function()
-            require("omnisharp_extended").lsp_definition()
-          end, "[O]mnisharp Go To Definition")
-          keymap("n", "<leader>ogD", function()
-            require("omnisharp_extended").lsp_type_definition()
-          end, "[O]mnisharp Go To Type Definition")
-          keymap("n", "<leader>ogr", function()
-            require("omnisharp_extended").lsp_references()
-          end, "[O]mnisharp Go To References")
-          keymap("n", "<leader>ogi", function()
-            require("omnisharp_extended").lsp_implementation()
-          end, "[O]mnisharp Go To Implementations")
         end,
       })
     end,
